@@ -4,10 +4,12 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { ClipboardCheck, GraduationCap, Info, Menu, School, ShieldCheck, Users, X } from 'lucide-react'
+import { ALUNOS } from '@/data/alunos'
+import { useEstado } from '@/lib/estado'
 
 const NAV = [
   { href: '/alunos', label: 'Alunos', icon: Users, pronto: true },
-  { href: '/alocacao', label: 'Central de Alocação', icon: ShieldCheck, pronto: false },
+  { href: '/alocacao', label: 'Central de Alocação', icon: ShieldCheck, pronto: true },
   { href: '/turmas', label: 'Escolas & Turmas', icon: School, pronto: false },
   { href: '/homologacao', label: 'Homologação', icon: ClipboardCheck, pronto: false },
   { href: '/sobre', label: 'Sobre o projeto', icon: Info, pronto: false },
@@ -15,6 +17,8 @@ const NAV = [
 
 function Navegacao({ aoNavegar }: { aoNavegar?: () => void }) {
   const pathname = usePathname()
+  const { decisoes } = useEstado()
+  const pendentes = ALUNOS.filter((a) => !decisoes[a.id]).length
   return (
     <nav aria-label="Menu principal">
       <ul className="space-y-1.5">
@@ -47,6 +51,12 @@ function Navegacao({ aoNavegar }: { aoNavegar?: () => void }) {
               >
                 <Icone className="h-5 w-5 shrink-0" aria-hidden="true" />
                 <span className="whitespace-nowrap">{item.label}</span>
+                {item.href === '/alocacao' && pendentes > 0 && (
+                  <span className="ml-auto rounded-full bg-blue-900/60 px-2 py-0.5 font-mono text-[11px] text-blue-100">
+                    {pendentes}
+                    <span className="sr-only"> aguardando alocação</span>
+                  </span>
+                )}
               </Link>
             </li>
           )

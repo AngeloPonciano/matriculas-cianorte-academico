@@ -130,6 +130,18 @@ export function decisoesIniciais(alunos: Aluno[], escolas: Escola[]): Decisoes {
   return decisoes
 }
 
+/** As decisões sem a do próprio aluno: a vaga dele não pode contar contra ele. */
+export function semDecisaoDe(alunoId: string, decisoes: Decisoes): Decisoes {
+  if (!decisoes[alunoId]) return decisoes
+  const resto = { ...decisoes }
+  delete resto[alunoId]
+  return resto
+}
+
+export function formatarKm(km: number): string {
+  return `${km.toLocaleString('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 })} km`
+}
+
 export function situacaoDoAluno(alunoId: string, decisoes: Decisoes): Situacao {
   const d = decisoes[alunoId]
   if (!d) return 'aguardando'

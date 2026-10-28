@@ -1,7 +1,7 @@
 // Testes das regras de sugestão. Rodam com `npm test` (Node 24, que lê TypeScript sem compilar).
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { avaliarAluno, decisoesIniciais, distanciaKm, ocupacaoPorDecisoes, situacaoDoAluno, vagasDaSerie } from '../src/lib/regras.ts'
+import { avaliarAluno, decisoesIniciais, distanciaKm, formatarKm, ocupacaoPorDecisoes, semDecisaoDe, situacaoDoAluno, vagasDaSerie } from '../src/lib/regras.ts'
 import type { Aluno, Escola } from '../src/lib/tipos.ts'
 
 const escola = (id: string, lat: number, lng: number, capacidade: number, matriculados: number): Escola => ({
@@ -79,4 +79,18 @@ test('situação: sem decisão aguarda; com decisão, alocado ou homologado', ()
   assert.equal(situacaoDoAluno('a', {}), 'aguardando')
   assert.equal(situacaoDoAluno('a', { a: { escolaId: 'e', homologado: false } }), 'alocado')
   assert.equal(situacaoDoAluno('a', { a: { escolaId: 'e', homologado: true } }), 'homologado')
+})
+
+test('a vaga do próprio aluno não conta contra ele ao reavaliar', () => {
+  const justa = escola('justa', 0.009, 0, 6, 5) // 1 vaga
+  const a = aluno({ id: 'eu' })
+  const decisoes = { eu: { escolaId: 'justa', homologado: false } }
+  const comigo = avaliarAluno(a, [justa], ocupacaoPorDecisoes([a], decisoes))
+  const semMim = avaliarAluno(a, [justa], ocupacaoPorDecisoes([a], semDecisaoDe('eu', decisoes)))
+  assert.equal(comigo.opcoes.length, 0)
+  assert.equal(semMim.opcoes[0].escola.id, 'justa')
+})
+
+test('distância formatada em km, com vírgula', () => {
+  assert.equal(formatarKm(1.234), '1,2 km')
 })

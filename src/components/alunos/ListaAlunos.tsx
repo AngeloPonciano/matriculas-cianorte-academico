@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
 import { Search, Users2, RotateCcw } from 'lucide-react'
@@ -72,6 +73,16 @@ export function ListaAlunos() {
   }
 
   const temFiltro = filtrosParaUrl({ ...filtros, busca }) !== ''
+
+  // Leva os filtros atuais para o botão "Voltar para Alunos" da Central.
+  const linkCentral = (alunoId: string, situacao: Situacao) => {
+    const p = new URLSearchParams({
+      aluno: alunoId,
+      aba: situacao === 'aguardando' ? 'aguardando' : 'alocados',
+      voltar: `${pathname}${filtrosParaUrl({ ...filtros, busca })}`,
+    })
+    return `/alocacao?${p.toString()}`
+  }
 
   return (
     <div className="space-y-6">
@@ -220,6 +231,9 @@ export function ListaAlunos() {
                     <th scope="col" className="hidden w-52 px-4 py-3 font-semibold lg:table-cell">Endereço</th>
                     <th scope="col" className="w-48 px-4 py-3 font-semibold">Irmão na rede</th>
                     <th scope="col" className="w-48 px-4 py-3 font-semibold">Situação</th>
+                    <th scope="col" className="w-24 px-4 py-3 font-semibold">
+                      <span className="sr-only">Ação</span>
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
@@ -247,6 +261,11 @@ export function ListaAlunos() {
                         </td>
                         <td className="px-4 py-3">
                           <Selo situacao={situacao} />
+                        </td>
+                        <td className="px-4 py-3">
+                          <Link href={linkCentral(a.id, situacao)} className="font-semibold text-acao underline-offset-2 hover:underline">
+                            Abrir<span className="sr-only"> {a.nome} na Central de Alocação</span>
+                          </Link>
                         </td>
                       </tr>
                     )
@@ -293,6 +312,12 @@ export function ListaAlunos() {
                           </>
                         )}
                       </dl>
+                      <Link
+                        href={linkCentral(a.id, situacao)}
+                        className="mt-3 inline-flex rounded-lg border border-slate-300 px-3 py-1.5 text-sm font-semibold text-acao hover:bg-slate-50"
+                      >
+                        Abrir na Central<span className="sr-only"> — {a.nome}</span>
+                      </Link>
                     </article>
                   </li>
                 )
