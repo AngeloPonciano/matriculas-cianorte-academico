@@ -8,11 +8,11 @@ import { ALUNOS } from '@/data/alunos'
 import { useEstado } from '@/lib/estado'
 
 const NAV = [
-  { href: '/alunos', label: 'Alunos', icon: Users, pronto: true },
-  { href: '/alocacao', label: 'Central de Alocação', icon: ShieldCheck, pronto: true },
-  { href: '/turmas', label: 'Escolas & Turmas', icon: School, pronto: false },
-  { href: '/homologacao', label: 'Homologação', icon: ClipboardCheck, pronto: false },
-  { href: '/sobre', label: 'Sobre o projeto', icon: Info, pronto: false },
+  { href: '/alunos', label: 'Alunos', icon: Users },
+  { href: '/alocacao', label: 'Central de Alocação', icon: ShieldCheck },
+  { href: '/turmas', label: 'Escolas & Turmas', icon: School },
+  { href: '/homologacao', label: 'Homologação', icon: ClipboardCheck },
+  { href: '/sobre', label: 'Sobre o projeto', icon: Info },
 ]
 
 function Navegacao({ aoNavegar }: { aoNavegar?: () => void }) {
@@ -25,20 +25,6 @@ function Navegacao({ aoNavegar }: { aoNavegar?: () => void }) {
         {NAV.map((item) => {
           const ativo = pathname === item.href || pathname.startsWith(`${item.href}/`)
           const Icone = item.icon
-          if (!item.pronto) {
-            return (
-              <li key={item.href}>
-                <span
-                  className="flex h-11 items-center gap-3 rounded-xl px-4 text-sm font-semibold text-blue-200/70"
-                  aria-disabled="true"
-                >
-                  <Icone className="h-5 w-5 shrink-0" aria-hidden="true" />
-                  <span className="whitespace-nowrap">{item.label}</span>
-                  <span className="sr-only">(em construção)</span>
-                </span>
-              </li>
-            )
-          }
           return (
             <li key={item.href}>
               <Link

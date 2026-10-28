@@ -149,7 +149,12 @@ export function CentralAlocacao() {
                   <li key={a.id}>
                     <button
                       type="button"
-                      onClick={() => irPara({ aluno: a.id })}
+                      onClick={() => {
+                        irPara({ aluno: a.id })
+                        // No celular o painel fica abaixo da fila: leva a pessoa até ele.
+                        if (window.matchMedia('(max-width: 1279px)').matches)
+                          setTimeout(() => document.getElementById('painel-aluno')?.scrollIntoView({ block: 'start' }), 50)
+                      }}
                       aria-current={selecionado ? 'true' : undefined}
                       className={`w-full rounded-xl px-3 py-2 text-left transition-colors ${
                         selecionado ? 'bg-blue-50 ring-2 ring-blue-600' : 'hover:bg-slate-50'
@@ -175,7 +180,7 @@ export function CentralAlocacao() {
 
         {/* Painel do aluno */}
         {aluno && avaliacao ? (
-          <section aria-labelledby="titulo-aluno" className="min-w-0 space-y-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
+          <section id="painel-aluno" aria-labelledby="titulo-aluno" className="min-w-0 scroll-mt-40 space-y-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
                 <h2 id="titulo-aluno" className="text-xl font-bold text-slate-900">
