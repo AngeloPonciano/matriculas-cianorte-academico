@@ -1,0 +1,41 @@
+@import "tailwindcss";
+
+/*
+ * Paleta inspirada no sistema real (azul-marinho, azul de ação e fundo cinza claro).
+ * Todas as combinações de texto usadas passam no contraste AA das WCAG 2.1.
+ */
+@theme {
+  --color-marinho: #0a2552;
+  --color-marinho-escuro: #071d42;
+  --color-acao: #1d4ed8;
+  --color-acao-hover: #1e40af;
+  --color-fundo: #f1f5f9;
+  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-fundo);
+  color: #0f172a;
+}
+
+/* Foco sempre visível para quem navega pelo teclado. */
+:focus-visible {
+  outline: 3px solid #f59e0b;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
