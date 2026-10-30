@@ -29,11 +29,23 @@ HTML e inspeção de artefatos.
 
 ## Esta versão demonstrativa
 
-O histórico Git deste repositório é o da construção desta versão, em 27/10/2026, uma tela por vez:
+O histórico Git deste repositório é o da construção desta versão.
+
+**Módulo 2 (27/10/2026, tag `v0.1.0`)**, uma tela por vez:
 
 1. Estrutura, layout acessível e tela de Alunos.
 2. Central de Alocação com sugestões, mapa e decisão da operadora.
 3. Escolas & Turmas, Homologação com exportação CSV e Sobre o projeto.
 4. Documentação, auditoria de acessibilidade, capturas e CI.
+
+**Módulo 3 (30/10/2026, tag `v0.2.0`)**, no ramo `feature/banco-de-dados`, incorporado à `main` por merge:
+
+1. Esquema PostgreSQL: tabelas, chaves, restrições, gatilhos e visões.
+2. Carga inicial gerada a partir dos dados fictícios da aplicação (e correção da ordem dos ids).
+3. Scripts de inserção, atualização e remoção.
+4. Consultas da rodada, incluindo a regra de sugestão em SQL.
+5. Demonstração das restrições bloqueando dados inválidos.
+6. Testes que comparam banco e aplicação, e o banco no CI.
+7. Documentação do modelo de dados e do fluxo de versionamento.
 
 Consulte `git log` para as datas e mensagens exatas.

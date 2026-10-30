@@ -66,3 +66,32 @@ Registro das principais escolhas, no formato contexto → decisão → consequê
 - **Decisão:** HTML semântico desde o início e auditoria automática com axe-core em todas as telas e em duas larguras.
 - **Consequência:** 0 violações registradas em [`ACESSIBILIDADE.md`](ACESSIBILIDADE.md). A ferramenta não substitui
   testes com pessoas usando leitores de tela, que ficam como melhoria futura.
+
+## 11. PostgreSQL, executado embutido pelo PGlite
+
+- **Contexto:** o Módulo 3 pede um banco relacional implementado em SQL. O sistema real usa PostgreSQL (Supabase), e
+  quem avalia o repositório não deveria precisar instalar e configurar um servidor para conferir os scripts.
+- **Decisão:** escrever os scripts em SQL do PostgreSQL e executá-los com o PGlite 0.5.8, que é o PostgreSQL 18
+  compilado para WebAssembly e roda dentro do Node, em memória.
+- **Consequência:** `npm run db` e `npm test` executam o banco em qualquer máquina e no CI, sem servidor nem senha. Os
+  mesmos arquivos rodam num PostgreSQL comum com `psql -f`. A versão foi fixada (`--save-exact`) e escolhida entre as
+  publicadas há mais de dois meses.
+
+## 12. Regras críticas garantidas pelo banco, não só pela aplicação
+
+- **Contexto:** no sistema real, duas operadoras podem decidir ao mesmo tempo; uma validação apenas na tela permitiria
+  ocupar a mesma última vaga duas vezes.
+- **Decisão:** além de chaves e `CHECK`, gatilhos validam série e vaga (travando a turma com `FOR UPDATE`), impedem a
+  troca de uma alocação homologada e registram cada ação num histórico que não aceita `UPDATE` nem `DELETE`. Vagas
+  livres e situação do aluno são calculadas por visões, nunca armazenadas.
+- **Consequência:** nenhum caminho de escrita (tela, script ou acesso direto) consegue gravar uma alocação inválida;
+  `05_restricoes.sql` demonstra os 12 bloqueios. Sem contadores redundantes, não há o que dessincronizar.
+
+## 13. Carga gerada a partir dos dados da aplicação, e testes que comparam os dois
+
+- **Decisão:** `database/gerar-dados.ts` produz `02_dados.sql` a partir de `src/data` e do mesmo motor de regras
+  (alocações iniciais); os testes comparam a visão de ocupação com `vagasDaSerie()` e a consulta de sugestões com
+  `avaliarAluno()`.
+- **Consequência:** banco e telas mostram a mesma rodada, e uma mudança de regra que só fosse feita num dos lados
+  quebra o CI. As telas continuam usando o `localStorage`; ligá-las ao banco (por rotas de servidor do Next.js) é o
+  próximo passo.
