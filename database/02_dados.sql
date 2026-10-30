@@ -31,14 +31,15 @@ INSERT INTO cmei (codigo, nome) VALUES
 INSERT INTO escola (codigo, nome, setor_id, latitude, longitude)
 SELECT v.codigo, v.nome, s.id, v.latitude, v.longitude
   FROM (VALUES
-    ('ipe', 'Escola Municipal Ipê Amarelo', 'Setor Central', -23.6612, -52.6048),
-    ('jacaranda', 'Escola Municipal Jacarandá', 'Setor Norte', -23.6455, -52.6012),
-    ('aroeira', 'Escola Municipal Aroeira', 'Setor Leste', -23.6598, -52.5832),
-    ('peroba', 'Escola Municipal Peroba Rosa', 'Setor Sul', -23.6788, -52.6071),
-    ('cedro', 'Escola Municipal Cedro', 'Setor Oeste', -23.6641, -52.6276),
-    ('paineira', 'Escola Municipal Paineira', 'Setor Noroeste', -23.6489, -52.6214)
-  ) AS v (codigo, nome, setor, latitude, longitude)
-  JOIN setor s ON s.nome = v.setor;
+    (1, 'ipe', 'Escola Municipal Ipê Amarelo', 'Setor Central', -23.6612, -52.6048),
+    (2, 'jacaranda', 'Escola Municipal Jacarandá', 'Setor Norte', -23.6455, -52.6012),
+    (3, 'aroeira', 'Escola Municipal Aroeira', 'Setor Leste', -23.6598, -52.5832),
+    (4, 'peroba', 'Escola Municipal Peroba Rosa', 'Setor Sul', -23.6788, -52.6071),
+    (5, 'cedro', 'Escola Municipal Cedro', 'Setor Oeste', -23.6641, -52.6276),
+    (6, 'paineira', 'Escola Municipal Paineira', 'Setor Noroeste', -23.6489, -52.6214)
+  ) AS v (ordem, codigo, nome, setor, latitude, longitude)
+  JOIN setor s ON s.nome = v.setor
+ ORDER BY v.ordem;
 
 INSERT INTO turma (escola_id, serie_id, ano_letivo, capacidade, matriculados_anteriores)
 SELECT e.id, s.id, 2027, v.capacidade, v.matriculados
@@ -57,7 +58,8 @@ SELECT e.id, s.id, 2027, v.capacidade, v.matriculados
     ('paineira', '1º Ano', 20, 14)
   ) AS v (escola, serie, capacidade, matriculados)
   JOIN escola e ON e.codigo = v.escola
-  JOIN serie s  ON s.nome = v.serie;
+  JOIN serie s  ON s.nome = v.serie
+ ORDER BY e.id, s.ordem;
 
 -- [D3] Alunos (48, todos fictícios)
 INSERT INTO aluno (cgm, nome, serie_id, cmei_id, turma_origem, logradouro, numero, setor_id,

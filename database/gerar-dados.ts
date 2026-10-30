@@ -45,9 +45,10 @@ ${lista(ORIGENS.map((o) => `  (${texto(o.id)}, ${texto(o.nome)})`))}
 INSERT INTO escola (codigo, nome, setor_id, latitude, longitude)
 SELECT v.codigo, v.nome, s.id, v.latitude, v.longitude
   FROM (VALUES
-${ESCOLAS.map((e) => `    (${texto(e.id)}, ${texto(e.nome)}, ${texto(e.setor)}, ${e.lat}, ${e.lng})`).join(',\n')}
-  ) AS v (codigo, nome, setor, latitude, longitude)
-  JOIN setor s ON s.nome = v.setor;
+${ESCOLAS.map((e, i) => `    (${i + 1}, ${texto(e.id)}, ${texto(e.nome)}, ${texto(e.setor)}, ${e.lat}, ${e.lng})`).join(',\n')}
+  ) AS v (ordem, codigo, nome, setor, latitude, longitude)
+  JOIN setor s ON s.nome = v.setor
+ ORDER BY v.ordem;
 
 INSERT INTO turma (escola_id, serie_id, ano_letivo, capacidade, matriculados_anteriores)
 SELECT e.id, s.id, 2027, v.capacidade, v.matriculados
@@ -55,7 +56,8 @@ SELECT e.id, s.id, 2027, v.capacidade, v.matriculados
 ${ESCOLAS.flatMap((e) => e.turmas.map((t) => `    (${texto(e.id)}, ${texto(t.serie)}, ${t.capacidade}, ${t.matriculados})`)).join(',\n')}
   ) AS v (escola, serie, capacidade, matriculados)
   JOIN escola e ON e.codigo = v.escola
-  JOIN serie s  ON s.nome = v.serie;
+  JOIN serie s  ON s.nome = v.serie
+ ORDER BY e.id, s.ordem;
 
 -- [D3] Alunos (${alunos.length}, todos fictícios)
 INSERT INTO aluno (cgm, nome, serie_id, cmei_id, turma_origem, logradouro, numero, setor_id,
